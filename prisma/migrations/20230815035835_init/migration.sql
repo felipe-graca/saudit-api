@@ -6,7 +6,6 @@ CREATE TABLE "User" (
     "fullName" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "isNew" BOOLEAN NOT NULL DEFAULT true,
     "isSocialMedia" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "lastSession" TIMESTAMP(3) NOT NULL,

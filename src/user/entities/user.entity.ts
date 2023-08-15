@@ -5,7 +5,6 @@ export class User {
   cpf: string;
   password: string;
   phone: string;
-  isNew: boolean;
   isSocialMedia: boolean;
   lastSession: Date;
   createdAt: Date;

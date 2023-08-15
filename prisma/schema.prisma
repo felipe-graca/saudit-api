@@ -14,7 +14,6 @@ model User {
   fullName      String
   phone         String   @unique
   password      String
-  isNew         Boolean  @default(true)
   isSocialMedia Boolean  @default(false)
   createdAt     DateTime @default(now())
   lastSession   DateTime @updatedAt

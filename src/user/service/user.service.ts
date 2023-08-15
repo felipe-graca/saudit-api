@@ -12,14 +12,18 @@ export class UserService {
     const data = {
       ...createUserDto,
       password: encryptedPassword,
-      isNewUser: true,
+      passwordConfirmation: undefined,
       isSocialMedia: false,
-      createdAt: new Date(),
-      lastSession: new Date(),
+      createdAt: new Date().toISOString(),
+      lastSession: new Date().toISOString(),
     };
 
     const _user = this._prisma.user.create({ data });
 
-    return { ..._user, password: undefined, passwordConfirmation: undefined };
+    return {
+      ..._user,
+      password: undefined,
+      isSocialMedia: true,
+    };
   }
 }

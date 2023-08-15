@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { User } from '../entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Match } from 'src/shared/decorators/match.decorator';
 
 export class CreateUserDto extends User {
   @IsString()
@@ -34,7 +35,7 @@ export class CreateUserDto extends User {
   @IsString()
   @MinLength(6)
   @MaxLength(20)
-  @Equals('password', { message: '[PASSWORD]: Passwords must match' })
+  @Match('password', { message: '[PASSWORD]: Passwords must match' })
   @ApiProperty()
   passwordConfirmation: string;
 
