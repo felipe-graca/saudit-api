@@ -7,15 +7,17 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
+            "name": "Nest Debug",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+              "run",
+              "start:debug",
+              "--",
+              "--inspect-brk"
             ],
-            "program": "${workspaceFolder}/src/auth/auth.controller.ts",
-            "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ]
-        }
-    ]
-}
+            "console": "integratedTerminal",
+            "restart": true,
+            "autoAttachChildProcesses": true
+          },
+    ],
+  }

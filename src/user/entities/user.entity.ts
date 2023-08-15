@@ -1,12 +1,11 @@
 export class User {
-  id?: string;
-  name: string;
+  id?: number;
+  fullName: string;
   email: string;
   cpf: string;
   password: string;
-  passwordConfirmation: string;
   phone: string;
-  isNewUser: boolean;
+  isNew: boolean;
   isSocialMedia: boolean;
   lastSession: Date;
   createdAt: Date;

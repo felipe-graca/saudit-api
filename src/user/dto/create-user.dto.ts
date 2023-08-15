@@ -1,5 +1,5 @@
 import {
-  IsBoolean,
+  Equals,
   IsEmail,
   IsString,
   Matches,
@@ -12,7 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateUserDto extends User {
   @IsString()
   @ApiProperty()
-  name: string;
+  fullName: string;
 
   @IsEmail()
   @ApiProperty()
@@ -34,9 +34,7 @@ export class CreateUserDto extends User {
   @IsString()
   @MinLength(6)
   @MaxLength(20)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'Password too weak',
-  })
+  @Equals('password', { message: '[PASSWORD]: Passwords must match' })
   @ApiProperty()
   passwordConfirmation: string;
 
@@ -45,12 +43,4 @@ export class CreateUserDto extends User {
   @MaxLength(11)
   @ApiProperty()
   phone: string;
-
-  @IsBoolean()
-  @ApiProperty()
-  isNewUser: boolean;
-
-  @IsBoolean()
-  @ApiProperty()
-  isSocialMedia: boolean;
 }
