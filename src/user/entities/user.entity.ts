@@ -4,7 +4,7 @@ export class User {
   email: string;
   cpf: string;
   password: string;
-  password_confirmation: string;
+  passwordConfirmation: string;
   phone: string;
   isNewUser: boolean;
   isSocialMedia: boolean;
