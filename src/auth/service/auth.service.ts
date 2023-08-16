@@ -45,7 +45,7 @@ export class AuthService {
     return AuthType.EMAIL;
   }
 
-  async signIn(user: User): Promise<UserToken> {
+  async login(user: User): Promise<UserToken> {
     const payload: UserPayload = {
       sub: user.id,
       cpf: user.cpf,
@@ -54,10 +54,8 @@ export class AuthService {
       phone: user.phone,
     };
 
-    const jwtToken = this._jwtService.sign(payload);
-
     return {
-      access_token: jwtToken,
+      access_token: this._jwtService.sign(payload),
     };
   }
 }

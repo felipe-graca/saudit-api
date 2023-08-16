@@ -2,11 +2,13 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from '@prisma/client';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly _userService: UserService) {}
 
+  @IsPublic()
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this._userService.create(createUserDto);
