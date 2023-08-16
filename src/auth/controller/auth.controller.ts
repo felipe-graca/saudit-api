@@ -1,3 +1,4 @@
+import { User } from './../../user/entities/user.entity';
 import {
   Controller,
   Get,
@@ -6,37 +7,43 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
-import { CreateAuthDto } from '../dto/create-auth.dto';
-import { UpdateAuthDto } from '../dto/update-auth.dto';
 
-@Controller('auth')
+import { LocalAuthGuard } from '../gaurds/local-auth.guard';
+import { AuthRequest } from '../models/auth-request.model';
+import { UserToken } from '../models/user-token.model';
+import { ApiBody } from '@nestjs/swagger';
+import { IsPublic } from '../decorators/is-public.decorator';
+
+@Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly _authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @IsPublic()
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          example: '00000000000',
+        },
+        password: {
+          type: 'string',
+          example: 'admin',
+        },
+      },
+    },
+  })
+  @UseGuards(LocalAuthGuard)
+  async login(@Request() req: AuthRequest): Promise<UserToken> {
+    return await this._authService.login({ ...req.user, id: req.user.id! });
   }
 }

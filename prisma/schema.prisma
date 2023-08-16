@@ -11,7 +11,7 @@ model User {
   id            Int      @id @default(autoincrement())
   email         String   @unique
   cpf           String   @unique
-  fullName      String
+  name          String
   phone         String   @unique
   password      String
   isSocialMedia Boolean  @default(false)

@@ -3,7 +3,7 @@ CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "cpf" TEXT NOT NULL,
-    "fullName" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "isSocialMedia" BOOLEAN NOT NULL DEFAULT false,

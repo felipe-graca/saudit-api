@@ -1,26 +1,66 @@
+import { PasswordError } from './../errors/password.error';
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from '../dto/create-auth.dto';
-import { UpdateAuthDto } from '../dto/update-auth.dto';
+
+import { UserService } from 'src/user/service/user.service';
+import * as bcrypt from 'bcrypt';
+import { User } from '@prisma/client';
+import { UnauthorizedError } from '../errors/unauthorized.error';
+import { EmailError } from '../errors/email.error';
+import { UserPayload } from '../models/user-payload.model';
+import { JwtService } from '@nestjs/jwt';
+import { UserToken } from '../models/user-token.model';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return `This action adds a new auth, ${createAuthDto}`;
+  constructor(
+    private readonly _userService: UserService,
+    private readonly _jwtService: JwtService,
+  ) {}
+
+  async validateUser(username: string, password: string): Promise<any> {
+    let _user: User;
+    if (this._identifyUsername(username) == AuthType.EMAIL) {
+      _user = await this._userService.findByEmail(username);
+    }
+    if (this._identifyUsername(username) == AuthType.CPF) {
+      _user = await this._userService.findByCpf(username);
+    }
+
+    if (_user) {
+      if (await bcrypt.compare(password, _user.password)) {
+        return {
+          ..._user,
+          password: undefined,
+        };
+      }
+      throw new PasswordError();
+    }
+    throw new EmailError();
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  _identifyUsername(username: string): AuthType {
+    if (username.length == 11) {
+      return AuthType.CPF;
+    }
+    return AuthType.EMAIL;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+  async login(user: User): Promise<UserToken> {
+    const payload: UserPayload = {
+      sub: user.id,
+      cpf: user.cpf,
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+    };
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth, ${updateAuthDto}`;
+    return {
+      access_token: this._jwtService.sign(payload),
+    };
   }
+}
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+enum AuthType {
+  EMAIL = 'email',
+  CPF = 'cpf',
 }
