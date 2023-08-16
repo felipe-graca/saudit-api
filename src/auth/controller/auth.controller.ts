@@ -1,3 +1,4 @@
+import { User } from './../../user/entities/user.entity';
 import {
   Controller,
   Get,
@@ -8,18 +9,39 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
-import { CreateAuthDto } from '../dto/create-auth.dto';
-import { UpdateAuthDto } from '../dto/update-auth.dto';
+
+import { LocalAuthGuard } from '../gaurds/local-auth.guard';
+import { AuthRequest } from '../models/auth-request.model';
+import { UserToken } from '../models/user-token.model';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly _authService: AuthService) {}
 
-  @Post('login')
+  @Post('signIn')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() createAuthDto: CreateAuthDto) {
-    // return this.authService.login(createAuthDto);
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          example: '00000000000',
+        },
+        password: {
+          type: 'string',
+          example: 'admin',
+        },
+      },
+    },
+  })
+  @UseGuards(LocalAuthGuard)
+  async signIn(@Request() req: AuthRequest): Promise<UserToken> {
+    return await this._authService.signIn({ ...req.user, id: req.user.id! });
   }
 }

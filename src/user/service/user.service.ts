@@ -29,9 +29,18 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    return {
-      ...(await this._prisma.user.findUnique({ where: { email } })),
-      password: undefined,
-    };
+    return await this._prisma.user.findUnique({ where: { email } });
+  }
+
+  async findByCpf(cpf: string): Promise<User> {
+    return await this._prisma.user.findUnique({ where: { cpf } });
+  }
+
+  async findById(id: number): Promise<User> {
+    return await this._prisma.user.findUnique({ where: { id } });
+  }
+
+  async findAll(): Promise<User[]> {
+    return await this._prisma.user.findMany();
   }
 }

@@ -13,7 +13,7 @@ import { Match } from 'src/shared/decorators/match.decorator';
 export class CreateUserDto extends User {
   @IsString()
   @ApiProperty()
-  fullName: string;
+  name: string;
 
   @IsEmail()
   @ApiProperty()
